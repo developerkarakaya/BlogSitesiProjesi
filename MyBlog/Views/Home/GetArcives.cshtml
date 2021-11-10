@@ -1,0 +1,8 @@
+﻿@model IEnumerable<MyBlog.DataEntitiess.arsiv1_Result>
+<h3 class="widget-title">Arşivler</h3>
+<ul>
+    @foreach (var item in Model)
+    {
+        <li><a href='/@item.YIL-@item.AY/'>@item.AY @item.YIL</a>&nbsp;(@item.MIKTAR)</li>
+    }
+</ul>

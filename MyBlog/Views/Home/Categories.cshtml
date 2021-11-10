@@ -1,0 +1,23 @@
+﻿@model IEnumerable<MyBlog.DataEntitiess.CATEGORY>
+<div  id="categories-2" class="widget widget_categories">
+    <h3 class="widget-title">Kategoriler</h3>
+    <ul>
+
+       @foreach (var item in Model)
+       {
+
+           int adet = 0;
+           using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+           {
+               adet = db.categoryAndArticleConn.Where(ss => ss.CategoryId == item.Id).Count();
+           }
+           if (adet != 0)
+           {
+            <li class="cat-item cat-item-841">
+                <a href="/category/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.CategoryName)/">@item.CategoryName</a> 
+                (@adet)
+            </li>
+           }
+       }
+    </ul>
+</div>

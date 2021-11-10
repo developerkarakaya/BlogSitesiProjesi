@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "index";
+    Layout = "~/Areas/Panel/Views/Shared/_AdminLayout.cshtml";
+}
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="~/Areas/Panel/angularjs/article.js?v=@DateTime.Now.ToString("ddMMyyyyHHmmss")"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.5.js"></script>
+<div class="main-content">
+    <div class="main-content-inner" ng-controller="articleController">
+        <div class="page-content">
+
+            <div class="page-header">
+                <h1>
+                    Makale Listesi
+                </h1>
+                <a class="btn btn-primary btn-sm" href="/panel/article/detail/" style="margin:10px"> Makale Ekle</a>
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
+                        <span class="input-icon">
+                            <input type="text" ng-model="SearchKey" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
+                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                        </span>
+                    </form>
+                </div><!-- /.nav-search -->
+                <br />
+            </div><!-- /.page-header -->
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <table id="simple-table" class="table  table-bordered table-hover">
+                                <thead>
+                                    <tr>
+
+                                        <th style="width:300px">Başlık</th>
+                                        <th class="hidden-480">Yazar</th>
+
+                                        <th>
+                                            Oluşturulma Tarihi
+                                        </th>
+                                        <th class="hidden-480">Durum</th>
+                                        <th>Fotoğraf</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <tr ng-repeat="list in filteredArticles |filter:SearchKey">
+                                        <td>{{list.Title}}</td>
+                                        <td class="hidden-480">{{list.Author}}</td>
+                                        <td>{{list.ArticleDate}}</td>
+
+                                        <td class="hidden-480">
+                                            <span ng-show="{{list.Is_Active}}" ng-click="articleActiveInPassive(list.Id)" class="label label-sm label-success">Aktif</span>
+                                            <span ng-show="{{!list.Is_Active}}" ng-click="articleActiveInPassive(list.Id)" class="label label-sm label-danger">Pasif</span>
+                                        </td>
+                                        <td>
+                                                <a ng-show="list.ArticleImage.length>0" target="_blank" href="{{list.ArticleImage}}">
+                                                    <i class="fa fa-eye"></i>
+                                                </a>
+                                            <span  style="color:red" ng-hide="list.ArticleImage.length>0"  >Fotoğraf Bulunamadı</span>
+                                        </td>
+                                        <td>
+                                            <div class="hidden-sm hidden-xs btn-group">
+                                                <a ng-click="articleDetail()" href="/panel/article/detail/{{list.Id}}" class="btn btn-xs btn-success">
+                                                    <i class="ace-icon fa fa-check bigger-120"></i>
+                                                </a>
+                                                <button ng-click="articleDelete(list.Id)" class="btn btn-xs btn-danger">
+                                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                </button>
+                                            </div>
+                                            <div class="hidden-md hidden-lg">
+                                                <div class="inline pos-rel">
+                                                    <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown" data-position="auto">
+                                                        <i class="ace-icon fa fa-cog icon-only bigger-110"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-only-icon dropdown-yellow dropdown-menu-right dropdown-caret dropdown-close">
+                                                        <li>
+                                                            <a ng-click="articleDetail()" href="/panel/article/detail/{{list.Id}}" class="tooltip-info" data-rel="tooltip" title="Detay Gör">
+                                                                <span class="blue">
+                                                                    <i class="ace-icon fa fa-search-plus bigger-120"></i>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+
+                                                        <li>
+                                                            <a ng-click="articleDelete(list.Id)" href="#" class="tooltip-error" data-rel="tooltip" title="Sil">
+                                                                <span class="red">
+                                                                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span style="text-align:center; color:red" ng-show="(filteredArticles |filter:SearchKey).length<=0"> Listelenecek Veri Bulunamadı.</span>
+                                </div>
+                            </div>
+                        </div><!-- /.span -->
+                    </div><!-- /.row -->
+                    <div class="row" style="text-align:center" ng-show="(filteredArticles |filter:SearchKey).length>0">
+                        <div class='wp-pagenavi' style="margin-bottom:-25px" role='navigation'>
+                            <span class='pages'>Toplam {{numPages}} sayfa, {{currentPage}}. sayfa gösteriliyor.</span>
+                        </div>
+                        <div class="col-span-12" ng-show="articleList.length>0">
+                            <uib-pagination ng-model="currentPage"
+                                            total-items="articleList.length"
+                                            max-size="maxSize"
+                                            items-per-page="numPerPage"
+                                            first-text="İlk"
+                                            class="pagination-sm"
+                                            previous-text="Geri"
+                                            next-text="İleri"
+                                            last-text="Son"
+                                            boundary-links="true"
+                                            num-pages="numPages"></uib-pagination>
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- PAGE CONTENT ENDS -->
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+            <!-- /.row -->
+        </div>
+    </div>
+</div>

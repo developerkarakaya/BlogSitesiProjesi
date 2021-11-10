@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layaout.cshtml";
+}
+@model IEnumerable<MyBlog.DataEntitiess.ARTICLE>
+
+@{
+    int sayac = 0;
+}
+<div class="page-title hu-pad group">
+    <h1><i class="fas fa-folder-open"></i>Kategori: <span>@ViewData["categoryName"]</span></h1>
+</div>
+<div class="hu-pad group">
+ 
+        <div id="grid-wrapper" class="post-list group">
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="post-row">
+                    @for (int j = 0; j < 2; j++)
+                    {
+                        if (sayac < 1)
+                        {
+                            foreach (var item in Model)
+                            {
+
+                                <article id="post-10482" class="group grid-item post-10482 post type-post status-publish format-standard has-post-thumbnail hentry category-asp-net-core category-azure-2 category-cross-platform category-ef-core category-genel category-redis category-web category-web-api tag-net-core tag-automapper tag-azure tag-azure-functions tag-database-first tag-dependency-injection tag-entity tag-microservice tag-redis tag-redis-pubsub tag-sql tag-worker">
+                                    <div class="post-inner post-hover">
+                                        <div class="post-thumbnail">
+                                            <a href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)">
+                                                <img width="720" href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)" height="340" src="@item.ArticleImage" class="attachment-thumb-large size-thumb-large wp-post-image" alt="" loading="lazy"
+                                                     srcset="@item.ArticleImage 720w, @item.ArticleImage 300w, @item.ArticleImage 520w" sizes="(max-width: 720px) 100vw, 720px">
+                                            </a>
+                                            <a class="post-comments" href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)"><i class="far fa-comments"></i>0</a>
+                                        </div><!--/.post-thumbnail-->
+                                        <div class="post-meta group">
+                                            <p class="post-category">
+                                                @{
+                                var id = item.Id;
+                                using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                {
+                                    var liste = db.categoryAndArticleConn.Where(ss => ss.ArticleId == id).ToList();
+                                    foreach (var item2 in liste)
+                                    {
+                                        var categoryNameList = db.CATEGORY.Where(ss => ss.Id == item2.CategoryId).ToList();
+                                        foreach (var item3 in categoryNameList)
+                                        {
+                                            <a href="category/cross-platform/asp-net-core/index.html" rel="category tag">@item3.CategoryName</a> <span>/</span>
+
+                                        }
+                                    }
+                                }
+                                                }
+                                            <p class="post-date">
+                                                <time class="published updated" datetime="2020-11-06 15:05:19">  @item.ArticleDate.Day  @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(item.ArticleDate.Month).ToUpper()  @item.ArticleDate.Year</time>
+                                            </p>
+
+                                        </div><!--/.post-meta-->
+                                        <h2 class="post-title entry-title">
+                                            <a href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)" rel="bookmark" title="Permalink to Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak">@item.Title</a>
+                                        </h2><!--/.post-title-->
+
+                                        <div class="entry excerpt entry-summary">
+                                            <p>@item.Content.Substring(0, 250) ...</p>
+                                        </div><!--/.entry-->
+
+                                    </div><!--/.post-inner-->
+                                </article>
+                            }
+                        }
+                        sayac++;
+
+                    }
+                </div>
+            }
+
+
+        </div>
+
+    <nav class="pagination group">
+        <div class='wp-pagenavi' role='navigation'>
+            <span class='pages'>Toplam 26 sayfa, 1. sayfa gösteriliyor.</span><span aria-current='page' class='current'>1</span><a class="page larger" title="Sayfa 2" href="page/2/index.html">2</a><a class="page larger" title="Sayfa 3" href="page/3/index.html">3</a><a class="page larger" title="Sayfa 4" href="page/4/index.html">4</a><a class="page larger" title="Sayfa 5" href="page/5/index.html">5</a><span class='extend'>...</span><a class="larger page" title="Sayfa 10" href="page/10/index.html">10</a><a class="larger page" title="Sayfa 20" href="page/20/index.html">20</a><span class='extend'>...</span><a class="nextpostslink" rel="next" href="page/2/index.html">&raquo;</a><a class="last" href="page/26/index.html">Son &raquo;</a>
+        </div>
+    </nav><!--/.pagination-->
+    </div>

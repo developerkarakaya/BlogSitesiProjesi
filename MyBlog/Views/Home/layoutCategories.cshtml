@@ -1,0 +1,20 @@
+﻿@model IEnumerable<MyBlog.DataEntitiess.CATEGORY>
+    @{
+        int adet = 0;
+        
+    }
+
+@foreach (var item in Model)
+{
+
+    using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+    {
+        adet = db.categoryAndArticleConn.Where(ss => ss.CategoryId == item.Id).Count();
+    }
+
+    if (adet != 0)
+    {
+        <li class="page_item"><a href="/category/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.CategoryName)">@item.CategoryName</a></li>
+    }
+
+}

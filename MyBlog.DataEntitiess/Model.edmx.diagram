@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="e773b7b14ddb441797cc67fd18d20dfb" Name="Diagram1" >
+        <EntityTypeShape EntityType="MYBLOGDBModel.ARTICLE" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.CATEGORY" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.categoryAndArticleConn" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.Months" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.YOUTUBEVIDEOS" Width="1.5" PointX="5.375" PointY="3.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.TAG_AND_ARTICLE_CONN" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.TAGS" Width="1.5" PointX="3.375" PointY="6.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.COMMENTS" Width="1.5" PointX="5.375" PointY="6.75" />
+        <EntityTypeShape EntityType="MYBLOGDBModel.SKILLS" Width="1.5" PointX="7.375" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,888 @@
+﻿@{
+    Layout = null;
+}
+@model MyBlog.BussinessLayer.Manager.ArticleDetailModel
+
+<!DOCTYPE html>
+<html class="no-js" xmlns="http://www.w3.org/1999/xhtml" prefix="" lang="tr" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://ogp.me/ns/fb#">
+
+<!-- Mirrored from www.borakasmer.com/azure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak%3Fwt.mc_id%3Ddop-mvp-5001703 by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 06 Jan 2021 19:13:38 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="profile" href="https://gmpg.org/xfn/11" />
+    <link rel="pingback" href="xmlrpc.php">
+
+
+    <!-- BEGIN Metadata added by the Add-Meta-Tags WordPress plugin -->
+    <meta name="description" content="Selamlar, https://youtu.be/K70ZyspmARU Bu makalede, günlük hayatta daha çok Cache yönetimi için kullanılan Redis&#039;in, Azure üzerinde bir başka özelliği olan Publisher/Subscriber platform&#039;u sayesinde haberleşerek, Azure Function Microservice üzerinden değişen kur bilgilerini asenkron ol..." />
+    <meta name="keywords" content="asp.net core, azure, cross platform, ef core, genel, redis, web, web api, .net core, automapper, azure, azure functions, database first, dependency injection, entity, microservice, redis, redis pubsub, sql, worker" />
+    <!-- END Metadata added by the Add-Meta-Tags WordPress plugin -->
+    <title>Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak &#8211; Bazıları Hayal Eder Bazıları Yapar &#8211; Bora Kaşmer &#8211; www.borakasmer.com</title>
+    <script>document.documentElement.className = document.documentElement.className.replace("no-js", "js");</script>
+    <link rel='dns-prefetch' href='/Content/http://s.w.org/' />
+    <link rel="alternate" type="application/rss+xml" title="Bazıları Hayal Eder Bazıları Yapar - Bora Kaşmer - www.borakasmer.com &raquo; beslemesi" href="feed/index.html" />
+    <link rel="alternate" type="application/rss+xml" title="Bazıları Hayal Eder Bazıları Yapar - Bora Kaşmer - www.borakasmer.com &raquo; yorum beslemesi" href="comments/feed/index.html" />
+    <link id="hu-user-gfont" href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300italic,300,400italic,700&amp;subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="alternate" type="application/rss+xml" title="Bazıları Hayal Eder Bazıları Yapar - Bora Kaşmer - www.borakasmer.com &raquo; Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak yorum beslemesi" href="azure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak_wt.mc_id%3ddop-mvp-5001703/feed/index.html" />
+    <script type="text/javascript">
+        window._wpemojiSettings = { "baseUrl": "https:\/\/s.w.org\/images\/core\/emoji\/13.0.1\/72x72\/", "ext": ".png", "svgUrl": "https:\/\/s.w.org\/images\/core\/emoji\/13.0.1\/svg\/", "svgExt": ".svg", "source": { "concatemoji": "http:\/\/www.borakasmer.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=5.6" } };
+        !function (e, a, t) { var r, n, o, i, p = a.createElement("canvas"), s = p.getContext && p.getContext("2d"); function c(e, t) { var a = String.fromCharCode; s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, e), 0, 0); var r = p.toDataURL(); return s.clearRect(0, 0, p.width, p.height), s.fillText(a.apply(this, t), 0, 0), r === p.toDataURL() } function l(e) { if (!s || !s.fillText) return !1; switch (s.textBaseline = "top", s.font = "600 32px Arial", e) { case "flag": return !c([127987, 65039, 8205, 9895, 65039], [127987, 65039, 8203, 9895, 65039]) && (!c([55356, 56826, 55356, 56819], [55356, 56826, 8203, 55356, 56819]) && !c([55356, 57332, 56128, 56423, 56128, 56418, 56128, 56421, 56128, 56430, 56128, 56423, 56128, 56447], [55356, 57332, 8203, 56128, 56423, 8203, 56128, 56418, 8203, 56128, 56421, 8203, 56128, 56430, 8203, 56128, 56423, 8203, 56128, 56447])); case "emoji": return !c([55357, 56424, 8205, 55356, 57212], [55357, 56424, 8203, 55356, 57212]) } return !1 } function d(e) { var t = a.createElement("script"); t.src = e, t.defer = t.type = "text/javascript", a.getElementsByTagName("head")[0].appendChild(t) } for (i = Array("flag", "emoji"), t.supports = { everything: !0, everythingExceptFlag: !0 }, o = 0; o < i.length; o++) t.supports[i[o]] = l(i[o]), t.supports.everything = t.supports.everything && t.supports[i[o]], "flag" !== i[o] && (t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && t.supports[i[o]]); t.supports.everythingExceptFlag = t.supports.everythingExceptFlag && !t.supports.flag, t.DOMReady = !1, t.readyCallback = function () { t.DOMReady = !0 }, t.supports.everything || (n = function () { t.readyCallback() }, a.addEventListener ? (a.addEventListener("DOMContentLoaded", n, !1), e.addEventListener("load", n, !1)) : (e.attachEvent("onload", n), a.attachEvent("onreadystatechange", function () { "complete" === a.readyState && t.readyCallback() })), (r = t.source || {}).concatemoji ? d(r.concatemoji) : r.wpemoji && r.twemoji && (d(r.twemoji), d(r.wpemoji))) }(window, document, window._wpemojiSettings);
+    </script>
+    <style type="text/css">
+        img.wp-smiley,
+        img.emoji {
+            display: inline !important;
+            border: none !important;
+            box-shadow: none !important;
+            height: 1em !important;
+            width: 1em !important;
+            margin: 0 .07em !important;
+            vertical-align: -0.1em !important;
+            background: none !important;
+            padding: 0 !important;
+        }
+    </style>
+    <link rel='stylesheet' id='crayon-css' href='/Content/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min2f6a.css?ver=_2.7.2_beta' type='text/css' media='all' />
+    <link rel='stylesheet' id='crayon-theme-arduino-ide-css' href='/Content/wp-content/plugins/crayon-syntax-highlighter/themes/arduino-ide/arduino-ide2f6a.css?ver=_2.7.2_beta' type='text/css' media='all' />
+    <link rel='stylesheet' id='crayon-font-monospace-css' href='/Content/wp-content/plugins/crayon-syntax-highlighter/fonts/monospace2f6a.css?ver=_2.7.2_beta' type='text/css' media='all' />
+    <link rel='stylesheet' id='wp-block-library-css' href='/Content/wp-includes/css/dist/block-library/style.min40df.css?ver=5.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='contact-form-7-css' href='/Content/wp-content/plugins/contact-form-7/includes/css/styles9dff.css?ver=5.3.2' type='text/css' media='all' />
+    <link rel='stylesheet' id='responsive-lightbox-nivo_lightbox-css-css' href='/Content/wp-content/plugins/responsive-lightbox-lite/assets/nivo-lightbox/nivo-lightbox40df.css?ver=5.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='responsive-lightbox-nivo_lightbox-css-d-css' href='/Content/wp-content/plugins/responsive-lightbox-lite/assets/nivo-lightbox/themes/default/default40df.css?ver=5.6' type='text/css' media='all' />
+    <link rel='stylesheet' id='hueman-main-style-css' href='/Content/wp-content/themes/hueman/assets/front/css/main.min3088.css?ver=3.7.0' type='text/css' media='all' />
+    <style id='hueman-main-style-inline-css' type='text/css'>
+        body {
+            font-family: 'Roboto Condensed', Arial, sans-serif;
+            font-size: 1.00rem;
+        }
+
+        media only screen and (min-width: 720px) {
+            .nav > li;
+
+        {
+            font-size: 1.00rem;
+        }
+
+        }
+
+        .sidebar .widget {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 20px;
+        }
+
+        ::selection {
+            background-color: #3b8dbd;
+        }
+
+        ::-moz-selection {
+            background-color: #3b8dbd;
+        }
+
+        a, a > span.hu-external::after, .themeform label .required, #flexslider-featured .flex-direction-nav .flex-next:hover, #flexslider-featured .flex-direction-nav .flex-prev:hover, .post-hover:hover .post-title a, .post-title a:hover, .sidebar.s1 .post-nav li a:hover i, .content .post-nav li a:hover i, .post-related a:hover, .sidebar.s1 .widget_rss ul li a, #footer .widget_rss ul li a, .sidebar.s1 .widget_calendar a, #footer .widget_calendar a, .sidebar.s1 .alx-tab .tab-item-category a, .sidebar.s1 .alx-posts .post-item-category a, .sidebar.s1 .alx-tab li:hover .tab-item-title a, .sidebar.s1 .alx-tab li:hover .tab-item-comment a, .sidebar.s1 .alx-posts li:hover .post-item-title a, #footer .alx-tab .tab-item-category a, #footer .alx-posts .post-item-category a, #footer .alx-tab li:hover .tab-item-title a, #footer .alx-tab li:hover .tab-item-comment a, #footer .alx-posts li:hover .post-item-title a, .comment-tabs li.active a, .comment-awaiting-moderation, .child-menu a:hover, .child-menu .current_page_item > a, .wp-pagenavi a {
+            color: #3b8dbd;
+        }
+
+        input[type="submit"], .themeform button[type="submit"], .sidebar.s1 .sidebar-top, .sidebar.s1 .sidebar-toggle, #flexslider-featured .flex-control-nav li a.flex-active, .post-tags a:hover, .sidebar.s1 .widget_calendar caption, #footer .widget_calendar caption, .author-bio .bio-avatar:after, .commentlist li.bypostauthor > .comment-body:after, .commentlist li.comment-author-admin > .comment-body:after {
+            background-color: #3b8dbd;
+        }
+
+        .post-format .format-container {
+            border-color: #3b8dbd;
+        }
+
+        .sidebar.s1 .alx-tabs-nav li.active a, #footer .alx-tabs-nav li.active a, .comment-tabs li.active a, .wp-pagenavi a:hover, .wp-pagenavi a:active, .wp-pagenavi span.current {
+            border-bottom-color: #3b8dbd !important;
+        }
+
+        .sidebar.s2 .post-nav li a:hover i,
+        .sidebar.s2 .widget_rss ul li a,
+        .sidebar.s2 .widget_calendar a,
+        .sidebar.s2 .alx-tab .tab-item-category a,
+        .sidebar.s2 .alx-posts .post-item-category a,
+        .sidebar.s2 .alx-tab li:hover .tab-item-title a,
+        .sidebar.s2 .alx-tab li:hover .tab-item-comment a,
+        .sidebar.s2 .alx-posts li:hover .post-item-title a {
+            color: #82b965;
+        }
+
+        .sidebar.s2 .sidebar-top, .sidebar.s2 .sidebar-toggle, .post-comments, .jp-play-bar, .jp-volume-bar-value, .sidebar.s2 .widget_calendar caption {
+            background-color: #82b965;
+        }
+
+        .sidebar.s2 .alx-tabs-nav li.active a {
+            border-bottom-color: #82b965;
+        }
+
+        .post-comments::before {
+            border-right-color: #82b965;
+        }
+
+        .search-expand,
+        #nav-topbar.nav-container {
+            background-color: #26272b;
+        }
+
+        media only screen and (min-width: 720px) {
+            #nav-topbar .nav ul;
+
+        {
+            background-color: #26272b;
+        }
+
+        }
+
+        .is-scrolled #header .nav-container.desktop-sticky,
+        .is-scrolled #header .search-expand {
+            background-color: #26272b;
+            background-color: rgba(38,39,43,0.90);
+        }
+
+        .is-scrolled .topbar-transparent #nav-topbar.desktop-sticky .nav ul {
+            background-color: #26272b;
+            background-color: rgba(38,39,43,0.95);
+        }
+
+        #header {
+            background-color: #33363b;
+        }
+
+        media only screen and (min-width: 720px) {
+            #nav-header .nav ul;
+
+        {
+            background-color: #33363b;
+        }
+
+        }
+
+        #header #nav-mobile {
+            background-color: #33363b;
+        }
+
+        .is-scrolled #header #nav-mobile {
+            background-color: #33363b;
+            background-color: rgba(51,54,59,0.90);
+        }
+
+        #nav-header.nav-container, #main-header-search .search-expand {
+            background-color:;
+        }
+
+        media only screen and (min-width: 720px) {
+            #nav-header .nav ul;
+
+        {
+            background-color:;
+        }
+
+        }
+
+        body {
+            background-color: #eaeaea;
+        }
+    </style>
+    <link rel='stylesheet' id='hueman-font-awesome-css' href='/Content/wp-content/themes/hueman/assets/front/css/font-awesome.min3088.css?ver=3.7.0' type='text/css' media='all' />
+    <link rel='stylesheet' id='wptt_front-css' href='/Content/wp-content/plugins/wp-twitter-feeds/css/admin_style.min40df.css?ver=5.6' type='text/css' media='all' />
+    <script type='text/javascript' src='/Content/wp-includes/js/jquery/jquery.min9d52.js?ver=3.5.1' id='jquery-core-js'></script>
+    <script type='text/javascript' src='/Content/wp-includes/js/jquery/jquery-migrate.mind617.js?ver=3.3.2' id='jquery-migrate-js'></script>
+    <script type='text/javascript' id='crayon_js-js-extra'>
+        /* <![CDATA[ */
+        var CrayonSyntaxSettings = { "version": "_2.7.2_beta", "is_admin": "0", "ajaxurl": "http:\/\/www.borakasmer.com\/wp-admin\/admin-ajax.php", "prefix": "crayon-", "setting": "crayon-setting", "selected": "crayon-setting-selected", "changed": "crayon-setting-changed", "special": "crayon-setting-special", "orig_value": "data-orig-value", "debug": "" };
+        var CrayonSyntaxStrings = { "copy": "%s ile Kopyala, %s ile Yap\u0131\u015ft\u0131r", "minimize": "Kodu Geni\u015fletmek \u0130\u00e7in T\u0131kla" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='/Content/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min2f6a.js?ver=_2.7.2_beta' id='crayon_js-js'></script>
+    <link rel="https://api.w.org/" href="wp-json/index.html" />
+    <link rel="alternate" type="application/json" href="wp-json/wp/v2/posts/10482.json" />
+    <link rel="EditURI" type="application/rsd+xml" title="RSD" href="xmlrpc0db0.php?rsd" />
+    <link rel="wlwmanifest" type="application/wlwmanifest+xml" href="wp-includes/wlwmanifest.xml" />
+    <meta name="generator" content="WordPress 5.6" />
+    <link rel="canonical" href="azure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak_wt.html" />
+    <link rel='shortlink' href='/Content/index2e65.html?p=10482' />
+    <link rel="alternate" type="application/json+oembed" href="wp-json/oembed/1.0/embedf9c7?url=http%3A%2F%2Fwww.borakasmer.com%2Fazure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak%253Fwt.mc_id%253Ddop-mvp-5001703" />
+    <link rel="alternate" type="text/xml+oembed" href="wp-json/oembed/1.0/embedccac?url=http%3A%2F%2Fwww.borakasmer.com%2Fazure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak%253Fwt.mc_id%253Ddop-mvp-5001703&amp;format=xml" />
+    <link rel="preload" as="font" type="font/woff2" href="wp-content/themes/hueman/assets/front/webfonts/fa-brands-400fc5f.woff2?v=5.12.1" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="wp-content/themes/hueman/assets/front/webfonts/fa-regular-400fc5f.woff2?v=5.12.1" crossorigin="anonymous" />
+    <link rel="preload" as="font" type="font/woff2" href="wp-content/themes/hueman/assets/front/webfonts/fa-solid-900fc5f.woff2?v=5.12.1" crossorigin="anonymous" />
+    <!--[if lt IE 9]>
+    <script src="http://www.borakasmer.com/wp-content/themes/hueman/assets/front/js/ie/html5shiv-printshiv.min.js"></script>
+    <script src="http://www.borakasmer.com/wp-content/themes/hueman/assets/front/js/ie/selectivizr.js"></script>
+    <![endif]-->
+    <style type="text/css">
+        .recentcomments a {
+            display: inline !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+    </style>
+    <link rel="icon" href="wp-content/uploads/2014/07/BK2-150x150.jpg" sizes="32x32" />
+    <link rel="icon" href="wp-content/uploads/2014/07/BK2.jpg" sizes="192x192" />
+    <link rel="apple-touch-icon" href="wp-content/uploads/2014/07/BK2.jpg" />
+    <meta name="msapplication-TileImage" content="http://www.borakasmer.com/wp-content/uploads/2014/07/BK2.jpg" />
+    <!-- START - Open Graph and Twitter Card Tags 3.1.0 -->
+    <!-- Facebook Open Graph -->
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:site_name" content="Bazıları Hayal Eder Bazıları Yapar - Bora Kaşmer - www.borakasmer.com" />
+    <meta property="og:title" content="Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak" />
+    <meta property="og:url" content="http://www.borakasmer.com/azure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak%3Fwt.mc_id%3Ddop-mvp-5001703" />
+    <meta property="og:type" content="article" />
+    <meta property="og:description" content="Selamlar,
+
+https://youtu.be/K70ZyspmARU
+
+Bu makalede, günlük hayatta daha çok Cache yönetimi için kullanılan Redis&#039;in, Azure üzerinde bir başka özelliği olan Publisher/Subscriber platform&#039;u sayesinde haberleşerek, Azure Function Microservice üzerinden değişen kur bilgilerini asenkron olarak yani" />
+    <meta property="og:image" content="http://www.borakasmer.com/wp-content/uploads/2020/10/redis.jpg" />
+    <meta property="og:image:url" content="http://www.borakasmer.com/wp-content/uploads/2020/10/redis.jpg" />
+    <meta property="article:published_time" content="2020-11-06T15:05:19+03:00" />
+    <meta property="article:modified_time" content="2020-11-20T02:00:07+03:00" />
+    <meta property="og:updated_time" content="2020-11-20T02:00:07+03:00" />
+    <meta property="article:section" content="Asp.Net Core" />
+    <meta property="article:section" content="Azure" />
+    <meta property="article:section" content="Cross Platform" />
+    <meta property="article:section" content="EF Core" />
+    <meta property="article:section" content="Genel" />
+    <meta property="article:section" content="Redis" />
+    <meta property="article:section" content="Web" />
+    <meta property="article:section" content="Web API" />
+    <!-- Google+ / Schema.org -->
+    <meta itemprop="name" content="Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak" />
+    <meta itemprop="headline" content="Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak" />
+    <meta itemprop="description" content="Selamlar,
+
+https://youtu.be/K70ZyspmARU
+
+Bu makalede, günlük hayatta daha çok Cache yönetimi için kullanılan Redis&#039;in, Azure üzerinde bir başka özelliği olan Publisher/Subscriber platform&#039;u sayesinde haberleşerek, Azure Function Microservice üzerinden değişen kur bilgilerini asenkron olarak yani" />
+    <meta itemprop="image" content="http://www.borakasmer.com/wp-content/uploads/2020/10/redis.jpg" />
+    <meta itemprop="datePublished" content="2020-11-06" />
+    <meta itemprop="dateModified" content="2020-11-20T02:00:07+03:00" />
+    <meta itemprop="author" content="borsoft" />
+    <!--<meta itemprop="publisher" content="Bazıları Hayal Eder Bazıları Yapar - Bora Kaşmer - www.borakasmer.com"/>--> <!-- To solve: The attribute publisher.itemtype has an invalid value -->
+    <!-- Twitter Cards -->
+    <meta name="twitter:title" content="Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak" />
+    <meta name="twitter:url" content="http://www.borakasmer.com/azure-uzerinde-redis-pub-sub-ile-microservis-mimarisinde-data-consistency-saglamak%3Fwt.mc_id%3Ddop-mvp-5001703" />
+    <meta name="twitter:description" content="Selamlar,
+
+https://youtu.be/K70ZyspmARU
+
+Bu makalede, günlük hayatta daha çok Cache yönetimi için kullanılan Redis&#039;in, Azure üzerinde bir başka özelliği olan Publisher/Subscriber platform&#039;u sayesinde haberleşerek, Azure Function Microservice üzerinden değişen kur bilgilerini asenkron olarak yani" />
+    <meta name="twitter:image" content="http://www.borakasmer.com/wp-content/uploads/2020/10/redis.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="CoderBora" />
+    <!-- SEO -->
+    <!-- Misc. tags -->
+    <!-- is_singular -->
+    <!-- END - Open Graph and Twitter Card Tags 3.1.0 -->
+    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="post-template-default single single-post postid-10482 single-format-standard wp-custom-logo wp-embed-responsive col-2cr full-width topbar-enabled header-desktop-sticky header-mobile-sticky hueman-3-7-0 unknown">
+    <div id="wrapper">
+        <a class="screen-reader-text skip-link" href="#content">Skip to content</a>
+
+        <header id="header" class="main-menu-mobile-on one-mobile-menu main_menu header-ads-desktop  topbar-transparent no-header-img">
+            <nav class="nav-container group mobile-menu mobile-sticky no-menu-assigned" id="nav-mobile" data-menu-id="header-1">
+                <div class="mobile-title-logo-in-header">
+                    <h2 style="font-size: 15px;
+    color: white;
+    margin-left: 5%;">
+                        Samet Mirza Karakaya -Software Developer
+                    </h2>
+                    <p class="site-description">Anlattıkların karşındakinin anlayabildiği kadardır</p>
+                </div>
+
+                <!-- <div class="ham__navbar-toggler collapsed" aria-expanded="false">
+                  <div class="ham__navbar-span-wrapper">
+                    <span class="ham-toggler-menu__span"></span>
+                  </div>
+                </div> -->
+                <button class="ham__navbar-toggler-two collapsed" title="Menu" aria-expanded="false">
+                    <span class="ham__navbar-span-wrapper">
+                        <span class="line line-1"></span>
+                        <span class="line line-2"></span>
+                        <span class="line line-3"></span>
+                    </span>
+                </button>
+
+                <div class="nav-text"></div>
+                <div class="nav-wrap container">
+                    <ul class="nav container-inner group mobile-search">
+                        <li>
+                            <form role="search" method="get" class="search-form" action="http://www.borakasmer.com/">
+                                <label>
+                                    <span class="screen-reader-text">Arama:</span>
+                                    <input type="search" class="search-field" placeholder="Ara &hellip;" value="" name="s" />
+                                </label>
+                                <input type="submit" class="search-submit" value="Ara" />
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav><!--/#nav-topbar-->
+            <nav class="nav-container group desktop-menu desktop-sticky " id="nav-topbar" data-menu-id="header-2">
+                <div class="nav-text"></div>
+                <div class="topbar-toggle-down">
+                    <i class="fas fa-angle-double-down" aria-hidden="true" data-toggle="down" title="Expand menu"></i>
+                    <i class="fas fa-angle-double-up" aria-hidden="true" data-toggle="up" title="Collapse menu"></i>
+                </div>
+                <div class="nav-wrap container">
+                    <ul class="nav container-inner group">
+                        <li><a style="font-size:13px"><i class="fa fa-clock">  @DateTime.Now.ToString("dddd"), @DateTime.Now.Day  @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(DateTime.Now.Month)  @DateTime.Now.Year </i></a></li>
+                        <li><a href="index.html">Ana Sayfa</a></li>
+                        <li class="page_item page-item-992">
+                            <a href="hakkimda/index.html">Hakkımda</a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="topbar-header-search" class="container">
+                    <div class="container-inner">
+                        <button class="toggle-search"><i class="fas fa-search"></i></button>
+                        <div class="search-expand">
+                            <div class="search-expand-inner">
+                                <form role="search" method="get" class="search-form" action="http://www.borakasmer.com/">
+                                    <label>
+                                        <span class="screen-reader-text">Arama:</span>
+                                        <input type="search" class="search-field" placeholder="Ara &hellip;" value="" name="s" />
+                                    </label>
+                                    <input type="submit" class="search-submit" value="Ara" />
+                                </form>
+                            </div>
+                        </div>
+                    </div><!--/.container-inner-->
+                </div><!--/.container-->
+
+            </nav><!--/#nav-topbar-->
+            <div class="container group">
+                <div class="container-inner">
+
+                    <div class="group hu-pad central-header-zone">
+                        <h2 style="font-size:30px; color:white">Samet Mirza Karakaya -Software Developer</h2>
+                        <p class="site-description">“Sen ne söylersen söyle, söylediğin, karşındakinin anladığı kadardır.”</p>
+                    </div>
+                </div>
+
+            </div><!--/.container-inner-->
+    </div><!--/.container-->
+    </header><!--/#header-->
+
+    <div class="container" id="page">
+        <div class="container-inner">
+            <div class="main">
+                <div class="main-inner group">
+
+                    <section class="content" id="content">
+                        <div class="page-title hu-pad group">
+                            <ul class="meta-single group">
+                                <li class="category">
+                                    @{
+                                        var id = Model.Detail.Id;
+                                        using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                        {
+                                            var liste = db.categoryAndArticleConn.Where(ss => ss.ArticleId == id).ToList();
+                                            foreach (var item2 in liste)
+                                            {
+                                                var categoryNameList = db.CATEGORY.Where(ss => ss.Id == item2.CategoryId).ToList();
+                                                foreach (var item3 in categoryNameList)
+                                                {
+                                                    <a href="category/cross-platform/asp-net-core/index.html" rel="category tag">@item3.CategoryName</a> <span>/</span>
+
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                </li>
+                                <li class="comments">
+                                    <a href="#comments">
+                                        <i class="far fa-comments"></i>@{
+                                            using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                            {
+                                                int commentadet = db.COMMENTS.Where(ss => ss.MAKALEID == Model.Detail.Id && ss.Is_Approve == true).Count();
+                                                if (commentadet != null)
+                                                {
+                                                    @commentadet
+                                                }
+
+
+                                            }
+
+
+                                        }
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div><!--/.page-title-->
+                        <div class="hu-pad group">
+                            <article class="post-10482 post type-post status-publish format-standard has-post-thumbnail hentry category-asp-net-core category-azure-2 category-cross-platform category-ef-core category-genel category-redis category-web category-web-api tag-net-core tag-automapper tag-azure tag-azure-functions tag-database-first tag-dependency-injection tag-entity tag-microservice tag-redis tag-redis-pubsub tag-sql tag-worker">
+                                <div class="post-inner group">
+
+                                    <h1 class="post-title entry-title">@Model.Detail.Title</h1>
+                                    <p class="post-byline">
+                                        Yazar:     <span class="vcard author">
+                                            <span class="fn"><a href="author/borsoft/index.html" title="borsoft tarafından yazılan yazılar" rel="author">@Model.Detail.Author</a></span>
+                                        </span>
+                                        &middot;
+                                        <span class="published">@Model.Detail.ArticleDate.Day  @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(Model.Detail.ArticleDate.Month).ToUpper()  @Model.Detail.ArticleDate.Year</span>
+                                    </p>
+
+
+                                    <div class="clear"></div>
+
+                                    <div class="entry themeform">
+                                        <div class="entry-inner">
+                                            @Model.Detail.Content
+                                        </div>
+
+
+                                        <div class="clear"></div>
+                                    </div><!--/.entry-->
+
+                                </div><!--/.post-inner-->
+                            </article><!--/.post-->
+
+                            <div class="clear"></div>
+
+                            <p class="post-tags">
+                                <span>Etiketler:</span>
+
+                                @foreach (var item in Model.ArticleTags)
+                                {
+                                    int tagId = Convert.ToInt32(item.TagId);
+                                    using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                    {
+                                        var tagName = db.TAGS.FirstOrDefault(ss => ss.Id == tagId).TagName;
+                                        <a href="tag/net-core/index.html" rel="tag">@tagName</a>
+                                    }
+                                }
+                            </p>
+
+                            <h4 class="heading">
+                                <i class="far fa-hand-point-right"></i>Rastgele yazılar..
+                            </h4>
+
+                            <ul class="related-posts group">
+                                @foreach (var item in Model.RandomArticles)
+                                {
+                                    <li class="related post-hover">
+                                        <article class="post-5383 post type-post status-publish format-standard has-post-thumbnail hentry category-javascript category-typescript category-web tag-readonly tag-typescript tag-typescript-2-0 tag-union-types">
+
+                                            <div class="post-thumbnail">
+                                                <a href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)" class="hu-rel-post-thumb">
+                                                    <img width="520" height="245" src="@item.ArticleImage" class="attachment-thumb-medium size-thumb-medium wp-post-image" alt="" loading="lazy" srcset="@item.ArticleImage 520w, @item.ArticleImage 300w" sizes="(max-width: 520px) 100vw, 520px" />
+                                                </a>
+                                                <a class="post-comments" href="typescript-2-0da-tagged-union-types-ve-read-only-ozellikleri/index.html#respond"><i class="far fa-comments"></i>0</a>
+                                            </div><!--/.post-thumbnail-->
+
+                                            <div class="related-inner">
+
+                                                <h4 class="post-title entry-title">
+                                                    <a href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)" rel="bookmark" title="Permalink to TypeScript 2.0&#8217;da Tagged Union Types ve Read-Only Özellikleri">@item.Title</a>
+                                                </h4><!--/.post-title-->
+
+                                                <div class="post-meta group">
+                                                    <p class="post-date">
+                                                        <time class="published updated" datetime="2016-11-25 10:37:06">@item.ArticleDate.Day  @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(item.ArticleDate.Month).ToUpper()  @item.ArticleDate.Year</time>
+                                                    </p>
+
+                                                </div><!--/.post-meta-->
+
+                                            </div><!--/.related-inner-->
+
+                                        </article>
+                                    </li>
+                                }
+
+                            </ul><!--/.post-related-->
+
+
+
+                            <section id="comments" class="themeform">
+
+                                @{
+                                    using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                    {
+                                        int commentadet = db.COMMENTS.Where(ss => ss.MAKALEID == Model.Detail.Id && ss.Is_Approve == true).Count();
+                                        if (commentadet != null)
+                                        {
+                                            <h3 class="heading">@commentadet Cevaplar</h3>
+                                        }
+
+
+                                    }
+
+
+                                }
+
+                                <ul class="comment-tabs group">
+                                    <li class="active">
+                                        <a href="#commentlist-container">
+                                            <i class="far fa-comments"></i>Yorumlar<span>
+                                                @{
+                                                    using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                                    {
+                                                        int commentadet = db.COMMENTS.Where(ss => ss.MAKALEID == Model.Detail.Id && ss.Is_Approve == true).Count();
+                                                        if (commentadet != null)
+                                                        {
+                                                            @commentadet
+                                                        }
+                                                    }
+                                                }
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li><a href="#pinglist-container"><i class="fas fa-share"></i>Referans Bildirimi<span>0</span></a></li>
+                                </ul>
+
+                                <div id="commentlist-container" class="comment-tab">
+
+                                    <ol class="commentlist">
+                                        @foreach (var item in Model.getComments.Where(ss => ss.USTID == 0))
+                                        {
+                                            <li class="comment even thread-even depth-1 parent" id="comment-@item.ID">
+                                                <div id="div-comment-@item.ID" class="comment-body">
+                                                    <div class="comment-author vcard">
+                                                        <img alt="" src="http://0.gravatar.com/avatar/637b6358bbf7253b25bc106c8a21f11f?s=48&amp;d=mm&amp;r=g" srcset="http://0.gravatar.com/avatar/637b6358bbf7253b25bc106c8a21f11f?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy">
+                                                        <cite class="fn">
+                                                            @item.CommentByName
+                                                        </cite> <span class="says">dedi ki:</span>
+                                                    </div>
+
+                                                    <div class="comment-meta commentmetadata">
+                                                        <a href="">@item.CREATEDATE.Value.Day @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(item.CREATEDATE.Value.Month) @item.CREATEDATE.Value.Year, @item.CREATEDATE.Value.Hour:@item.CREATEDATE.Value.Minute</a>
+                                                    </div>
+
+                                                    <p>@item.Comment</p>
+
+                                                    <div class="reply"><a rel="nofollow" class="comment-reply-link" href="/@Model.Detail.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(Model.Detail.Title)/?commentResponse=@item.ID#respond">Cevapla</a></div>
+                                                </div>
+                                                <ul class="childiren">
+
+                                                    @foreach (var cp in Model.getComments.Where(ss => ss.USTID == item.ID))
+                                                    {
+
+                                                        <li class="comment byuser comment-author-borsoft bypostauthor odd alt depth-2" id="comment-@cp.ID">
+                                                            <div id="div-comment-@cp.ID" class="comment-body">
+                                                                <div class="comment-author vcard">
+                                                                    <img alt="" src="http://1.gravatar.com/avatar/7c16b0e19f131426b2a180d16463537d?s=48&amp;d=mm&amp;r=g" srcset="http://1.gravatar.com/avatar/7c16b0e19f131426b2a180d16463537d?s=96&amp;d=mm&amp;r=g 2x" class="avatar avatar-48 photo" height="48" width="48" loading="lazy">			<cite class="fn">@cp.CommentByName</cite> <span class="says">dedi ki:</span>
+                                                                </div>
+
+                                                                <div class="comment-meta commentmetadata">
+                                                                    <a href="">@item.CREATEDATE.Value.Day @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(item.CREATEDATE.Value.Month) @item.CREATEDATE.Value.Year, @item.CREATEDATE.Value.Hour:@item.CREATEDATE.Value.Minute</a>
+
+                                                                </div>
+
+                                                                <p>
+                                                                    @cp.Comment
+                                                                </p>
+                                                            </div>
+                                                        </li>
+
+                                                    }
+                                                </ul>
+
+
+                                            </li>
+                                        }
+
+                                    </ol><!--/.commentlist-->
+
+
+                                </div>
+
+                                <div id="respond" class="comment-respond">
+                                    <h3 id="reply-title" class="comment-reply-title">
+                                        @if (Request.QueryString["commentResponse"] != null)
+                                        {
+                                            <a>
+                                                @{
+                                            using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                                            {
+
+                                                int idComment = Convert.ToInt32(Request.QueryString["commentResponse"]);
+                                                var commentby = db.COMMENTS.FirstOrDefault(ss => ss.ID == idComment).CommentByName;
+                                                @commentby
+                                            }
+                                                }
+                                            </a>
+                                        } @if (Request.QueryString["commentResponse"] != null)
+                                        {
+                                            <span>İçin</span>
+                                            <span>Bir cevap yazın </span>
+                                            <small><a rel="nofollow" id="cancel-comment-reply-link" href="/@Model.Detail.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(Model.Detail.Title)?#respond">Cevabı iptal et</a></small>
+                                        }
+                                        else
+                                        {
+                                            <span>Bir cevap yazın </span>
+                                            <small><a rel="nofollow" id="cancel-comment-reply-link" href="/Article/Detail/@Model.Detail.Id?#respond" style="display:none;">Cevabı iptal et</a></small>
+                                        }
+
+                                    </h3>
+                                    <form id="commentform" class="comment-form">
+                                        <input type="hidden" name="ID" />
+                                        <input type="hidden" name="USTID" id="USTID" value="@Request.QueryString["commentResponse"]" />
+                                        <p class="comment-notes" style="display:block"><span id="email-notes">E-posta hesabınız yayımlanmayacak.</span> Gerekli alanlar <span class="required" style="color:#007cba">*</span> ile işaretlenmişlerdir</p>
+
+                                        <p class="comment-form-comment">
+                                            <label for="comment">Yorum</label>
+                                            <textarea id="Comment" name="Comment" cols="45" rows="8" maxlength="65525" required="required"></textarea>
+                                        </p><p class="comment-form-author">
+                                            <label for="author">İsim <span class="required">*</span></label>
+                                            <input id="CommentByName" name="CommentByName" type="text" value="" size="30" maxlength="245" required="required">
+                                        </p>
+                                        <p class="comment-form-email">
+                                            <label for="email">E-posta <span class="required">*</span></label>
+                                            <input id="EPOSTA" name="EPOSTA" type="text" value="" size="30" maxlength="100" aria-describedby="email-notes" required="required">
+                                        </p>
+                                        <p class="comment-form-url">
+                                            <label for="url">İnternet sitesi</label>
+                                            <input id="WEBSITE" name="WEBSITE" type="text" value="" size="30" maxlength="200">
+                                        </p>
+                                        <p class="form-submit">
+                                            <input name="submit" type="submit" id="submit" class="submit" value="Yorum gönder">
+                                            <input type="hidden" name="MAKALEID" id="MAKALEID" value="@Model.Detail.Id">
+                                        </p>
+                                    </form>
+                                </div>
+
+
+
+                            </section><!--/#comments-->
+                        </div><!--/.hu-pad-->
+                    </section><!--/.content-->
+
+
+                    <div class="sidebar s1 collapsed" data-position="left" data-layout="col-2cr" data-sb-id="s1">
+
+                        <button class="sidebar-toggle" title="Yan Menüyü genişlet"><i class="fas sidebar-toggle-arrows"></i></button>
+
+                        <div class="sidebar-content">
+
+                            <div class="sidebar-top group">
+                                <p>Takip Et:</p>                
+                                    <ul class="social-links"><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Linkedin" aria-label="Linkedin" href="http://linkedin.com/in/borakasmer" target="_blank" style="color:"><i class="fab fa-linkedin"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Github" aria-label="Bizi takip edin Github" href="https://github.com/borakasmer" target="_blank"><i class="fab fa-github"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Medium" aria-label="Bizi takip edin Medium" href="https://medium.com/bora.kasmer78" target="_blank"><i class="fab fa-medium"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Twitter" aria-label="Twitter" href="http://www.twitter.com/coderbora" target="_blank" style="color:"><i class="fab fa-twitter"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Youtube" aria-label="Bizi takip edin Youtube" href="http://www.youtube.com/c/borakasmer" target="_blank"><i class="fab fa-youtube"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Facebook" aria-label="Facebook" href="https://www.facebook.com/bora.kasmer" target="_blank" style="color:"><i class="fab fa-facebook"></i></a></li></ul>
+                            </div>
+
+                            <ul class="post-nav group">
+                                @if (Model.NextArticle == null)
+                                {
+                                    <li class="next">
+                                        <a rel="next">
+                                            <i class="fas fa-chevron-right"></i><strong style="position: absolute;
+    top: 37%;
+    margin-left: 16%;
+}">Sonraki yazi bulunamadı :))</strong>
+                                        </a>
+                                    </li>
+
+                                }
+                                else
+                                {
+                                    <li class="next"><a href="/@Model.NextArticle.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(Model.NextArticle.Title)" rel="next"><i class="fas fa-chevron-right"></i><strong>Sonraki yazı</strong> <span>@Model.NextArticle.Title</span></a></li>
+
+                                }
+                                @if (Model.PrivArticle == null)
+                                {
+                                    <li class="next">
+                                        <a rel="next">
+                                            <i class="fas fa-chevron-left"></i><strong style="position: absolute;
+    top: 37%;
+    margin-left: 16%;
+}">Önceki yazı bulunamadı :))</strong>
+                                        </a>
+                                    </li>
+
+                                }
+                                else
+                                {
+                                    <li class="previous"><a href="/@Model.PrivArticle.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(Model.PrivArticle.Title)" rel="prev"><i class="fas fa-chevron-left"></i><strong>Önceki yazı</strong> <span>@Model.PrivArticle.Title</span></a></li>
+
+                                }
+                            </ul>
+
+
+                            <div id="pages-2" class="widget widget_pages">
+                                <h3 class="widget-title">Menü</h3>
+                                <ul>
+                                    <li class="page_item page-item-992"><a href="hakkimda/index.html">Ana Sayfa</a></li>
+                                    <li class="page_item page-item-992"><a href="hakkimda/index.html">Hakkımda</a></li>
+                                    <li class="page_item page-item-992"><a href="hakkimda/index.html">İletişim</a></li>
+                                </ul>
+                            </div>
+                            @*<div class="LI-profile-badge" style="margin-left:5%" data-version="v1" data-size="large" data-locale="tr_TR" data-type="vertical" data-theme="light" data-vanity="samet-mirza-karakaya-b46477195"><a class="LI-simple-link" href='https://tr.linkedin.com/in/samet-mirza-karakaya-b46477195?trk=profile-badge'>Samet Mirza Karakaya</a></div>*@
+                            <div id="search-2" class="widget widget_search">
+                                <form role="search" method="get" class="search-form" action="http://www.borakasmer.com/">
+                                    <label>
+                                        <span class="screen-reader-text">Arama:</span>
+                                        <input type="search" class="search-field" placeholder="Ara &hellip;" value="" name="s" />
+                                    </label>
+                                    <input type="submit" class="search-submit" value="Ara" />
+                                </form>
+                            </div>
+                            @Html.Action("LatersArticles", "Home")
+                            @Html.Action("Categories", "Home")
+                            @Html.Action("getCommentTop", "Home")
+                            <div id="archives-2" class="widget widget_archive">
+                                @Html.Action("GetArcives", "Home")
+                            </div>
+                        </div><!--/.sidebar-content-->
+                    </div>
+                </div><!--/.sidebar-content-->
+
+            </div><!--/.sidebar-->
+
+
+
+        </div><!--/.main-inner-->
+    </div><!--/.main-->
+    </div><!--/.container-inner-->
+    </div><!--/.container-->
+    <footer id="footer">
+
+
+
+
+        <section class="container" id="footer-bottom">
+            <div class="container-inner">
+
+                <a id="back-to-top" href="#"><i class="fas fa-angle-up"></i></a>
+
+                <div class="hu-pad group">
+
+                    <div class="grid one-half">
+                        <img id="footer-logo" src="wp-content/uploads/2014/07/1924784_10152038615342637_2097919385_n.jpg" alt="">
+
+                        <div id="copyright">
+                            <p>Bu sitedeki yazıların tüm hakkı ®Bora Kaşmer'e aittir</p>
+                        </div><!--/#copyright-->
+
+
+                    </div>
+
+                    <div class="grid one-half last">
+                        <ul class="social-links"><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Linkedin" aria-label="Linkedin" href="http://linkedin.com/in/borakasmer" target="_blank" style="color:"><i class="fab fa-linkedin"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Github" aria-label="Bizi takip edin Github" href="https://github.com/borakasmer" target="_blank"><i class="fab fa-github"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Medium" aria-label="Bizi takip edin Medium" href="https://medium.com/bora.kasmer78" target="_blank"><i class="fab fa-medium"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Twitter" aria-label="Twitter" href="http://www.twitter.com/coderbora" target="_blank" style="color:"><i class="fab fa-twitter"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Bizi takip edin Youtube" aria-label="Bizi takip edin Youtube" href="http://www.youtube.com/c/borakasmer" target="_blank"><i class="fab fa-youtube"></i></a></li><li><a rel="nofollow noopener noreferrer" class="social-tooltip" title="Facebook" aria-label="Facebook" href="https://www.facebook.com/bora.kasmer" target="_blank" style="color:"><i class="fab fa-facebook"></i></a></li></ul>
+                    </div>
+
+                </div><!--/.hu-pad-->
+
+            </div><!--/.container-inner-->
+        </section><!--/.container-->
+
+    </footer><!--/#footer-->
+    </div><!--/#wrapper-->
+    <!-- Google Analytics Local by Webcraftic Local Google Analytics -->
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'wp-content/uploads/wga-cache/local-ga.js', 'ga');
+        ga('create', 'UA-53005095-1', 'auto');
+        ga('set', 'anonymizeIp', true);
+        ga('send', 'pageview');
+    </script>
+    <!-- end Google Analytics Local by Webcraftic Local Google Analytics -->
+    <script type='text/javascript' id='contact-form-7-js-extra'>
+        /* <![CDATA[ */
+        var wpcf7 = { "apiSettings": { "root": "http:\/\/www.borakasmer.com\/wp-json\/contact-form-7\/v1", "namespace": "contact-form-7\/v1" }, "cached": "1" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='/Content/wp-content/plugins/contact-form-7/includes/js/scripts9dff.js?ver=5.3.2' id='contact-form-7-js'></script>
+    <script type='text/javascript' src='/Content/wp-content/plugins/responsive-lightbox-lite/assets/nivo-lightbox/nivo-lightbox.min40df.js?ver=5.6' id='responsive-lightbox-nivo_lightbox-js'></script>
+    <script type='text/javascript' id='responsive-lightbox-lite-script-js-extra'>
+        /* <![CDATA[ */
+        var rllArgs = { "script": "nivo_lightbox", "selector": "lightbox", "custom_events": "" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='/Content/wp-content/plugins/responsive-lightbox-lite/assets/inc/script40df.js?ver=5.6' id='responsive-lightbox-lite-script-js'></script>
+    <script type='text/javascript' src='/Content/wp-includes/js/underscore.min4511.js?ver=1.8.3' id='underscore-js'></script>
+    <script type='text/javascript' id='hu-front-scripts-js-extra'>
+        /* <![CDATA[ */
+        var HUParams = { "_disabled": [], "SmoothScroll": { "Enabled": true, "Options": { "touchpadSupport": false } }, "centerAllImg": "1", "timerOnScrollAllBrowsers": "1", "extLinksStyle": "", "extLinksTargetExt": "", "extLinksSkipSelectors": { "classes": ["btn", "button"], "ids": [] }, "imgSmartLoadEnabled": "", "imgSmartLoadOpts": { "parentSelectors": [".container .content", ".post-row", ".container .sidebar", "#footer", "#header-widgets"], "opts": { "excludeImg": [".tc-holder-img"], "fadeIn_options": 100, "threshold": 0 } }, "goldenRatio": "1.618", "gridGoldenRatioLimit": "350", "sbStickyUserSettings": { "desktop": true, "mobile": true }, "sidebarOneWidth": "340", "sidebarTwoWidth": "260", "isWPMobile": "", "menuStickyUserSettings": { "desktop": "stick_up", "mobile": "stick_up" }, "mobileSubmenuExpandOnClick": "", "submenuTogglerIcon": "<i class=\"fas fa-angle-down\"><\/i>", "isDevMode": "", "ajaxUrl": "http:\/\/www.borakasmer.com\/?huajax=1", "frontNonce": { "id": "HuFrontNonce", "handle": "22f5fcb73e" }, "isWelcomeNoteOn": "", "welcomeContent": "", "i18n": { "collapsibleExpand": "Expand", "collapsibleCollapse": "Collapse" }, "deferFontAwesome": "", "fontAwesomeUrl": "http:\/\/www.borakasmer.com\/wp-content\/themes\/hueman\/assets\/front\/css\/font-awesome.min.css?3.7.0", "mainScriptUrl": "http:\/\/www.borakasmer.com\/wp-content\/themes\/hueman\/assets\/front\/js\/scripts.min.js?3.7.0", "flexSliderNeeded": "", "flexSliderOptions": { "is_rtl": false, "has_touch_support": true, "is_slideshow": false, "slideshow_speed": 5000 } };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='/Content/wp-content/themes/hueman/assets/front/js/scripts.min3088.js?ver=3.7.0' id='hu-front-scripts-js' defer></script>
+    <script type='text/javascript' src='/Content/wp-includes/js/comment-reply.min40df.js?ver=5.6' id='comment-reply-js'></script>
+    <script type='text/javascript' src='/Content/wp-includes/js/wp-embed.min40df.js?ver=5.6' id='wp-embed-js'></script>
+    <script type='text/javascript' id='floating-social-bar-fsb-js-extra'>
+        /* <![CDATA[ */
+        var fsb = { "ajax": "http:\/\/www.borakasmer.com\/wp-admin\/admin-ajax.php", "nonce": "2e6d8404ab" };
+        /* ]]> */
+    </script>
+    <script type='text/javascript' src='/Content/wp-content/plugins/floating-social-bar/js/fsb5a2c.js?ver=1.1.7' id='floating-social-bar-fsb-js'></script>
+    <script async="async" type='text/javascript' src='/Content/wp-content/plugins/akismet/_inc/formf729.js?ver=4.1.7' id='akismet-form-js'></script>
+
+    <script type="text/javascript"
+            src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script type="text/javascript">
+
+        $('#submit').click(function () {
+            var Comment = $('#Comment').val();
+            var CommentByName = $('#CommentByName').val();
+            var EPOSTA = $('#EPOSTA').val();
+            var WEBSITE = $('#WEBSITE').val();
+            var MAKALEID = $('#MAKALEID').val();
+            var USTID = $('#USTID').val();
+
+            if (CommentByName == "") {
+                ShowMessage('Lütfen isim alanını doldurunuz !', 'e');
+            }
+            else if (EPOSTA == "") {
+                ShowMessage('Lütfen E-Posta alanını doldurunuz !', 'e');
+            }
+            else {
+                $.ajax({
+                    url: '/Article/postComment',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        Comment: Comment,
+                        CommentByName: CommentByName,
+                        EPOSTA: EPOSTA,
+                        WEBSITE: WEBSITE,
+                        MAKALEID: MAKALEID,
+                        USTID: USTID
+                    },
+                    success: function (response) {
+                        ShowMessage(response.CommentByName + ' Yorumun gönderildi. Onaylandıktan sonra paylaşılacaktır.', 's');
+                    },
+                    error: function (hata) {
+                        ShowMessage('Yourumun gönderilirken bir hata oluştu lütfen tekrar dene.', 'e');
+                    }
+                })
+            }
+
+
+        });
+
+
+
+        function ShowMessage(message, type) {
+            if (type == "s") {
+                swal({
+                    title: 'İşlem Başarılı',
+                    text: message,
+                    type: 'success',
+                    showCancelButtonClass: 'btn-success',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+            else {
+                swal({
+                    title: 'İşlem Başarısız',
+                    text: message,
+                    type: 'error',
+                    showCancelButtonClass: 'btn-danger',
+                    confirmButtonText: 'Tamam'
+                });
+            }
+        }
+    </script>
+</body>
+</html>

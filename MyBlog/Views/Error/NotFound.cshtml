@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "NotFound";
+    Layout = "~/Views/Shared/_Layaout.cshtml";
+}
+
+<section class="content" id="content">
+    <div class="page-title hu-pad group">
+        <h1><i class="fas fa-exclamation-circle cc_cursor"></i>404 Hatası. <span>Sayfa bulunamadı! </span></h1>
+
+    </div><!--/.page-title-->
+    <div class="hu-pad group">
+        <div class="notebox">
+            <form role="search" method="get" class="search-form" action="http://www.borakasmer.com/">
+                <label>
+                    <span class="screen-reader-text">Arama:</span>
+                    <input type="search" class="search-field" placeholder="Ara …" value="" name="s">
+                </label>
+                <input type="submit" class="search-submit" value="Ara">
+            </form>
+        </div>
+
+        <div class="entry">
+            <p>Ulaşmaya çalıştığınız sayfa mevcut değil ya da taşınmış. Aradığınızı bulmak için lütfen menüyü veya arama kutusunu kullanın.</p>
+        </div>
+    </div><!--/.hu-pad-->
+</section>

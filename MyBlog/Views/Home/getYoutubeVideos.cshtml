@@ -1,0 +1,6 @@
+﻿@model IEnumerable<MyBlog.DataEntitiess.YOUTUBEVIDEOS>
+<h3 class="widget-title">Youtube Videos</h3>
+@foreach (var item in Model)
+{   
+    @Html.Raw(item.VideoLink)
+}

@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MYBLOGDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ARTICLE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Content" Type="ntext" Nullable="false" />
+          <Property Name="ArticleDate" Type="datetime" Nullable="false" />
+          <Property Name="Author" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ArticleImage" Type="varchar" MaxLength="500" />
+          <Property Name="ArticleViews" Type="int" />
+          <Property Name="Is_Active" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="categoryAndArticleConn">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="ArticleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="COMMENTS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Comment" Type="ntext" />
+          <Property Name="CommentByName" Type="varchar" MaxLength="100" />
+          <Property Name="EPOSTA" Type="varchar" MaxLength="100" />
+          <Property Name="WEBSITE" Type="varchar" MaxLength="100" />
+          <Property Name="CREATEDATE" Type="datetime" />
+          <Property Name="USTID" Type="int" />
+          <Property Name="MAKALEID" Type="int" />
+          <Property Name="Is_Approve" Type="bit" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MYBLOGDB.dbo.Months' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Months">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="MonthNamee" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="SKILLS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SKILLYUZDE" Type="varchar" MaxLength="20" />
+          <Property Name="SKILLTITLE" Type="varchar" MaxLength="100" />
+          <Property Name="SKILL_TITLE_BG" Type="varchar" MaxLength="20" />
+          <Property Name="SKILL_BAR_BG" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="TAG_AND_ARTICLE_CONN">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TagId" Type="int" />
+          <Property Name="ArticleId" Type="int" />
+        </EntityType>
+        <EntityType Name="TAGS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TagName" Type="varchar" MaxLength="50" />
+          <Property Name="FontSize" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="YOUTUBEVIDEOS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VideoLink" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <Function Name="arsiv" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="returnMonth" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="varchar">
+          <Parameter Name="date" Type="datetime" Mode="In" />
+        </Function>
+        <EntityContainer Name="MYBLOGDBModelStoreContainer">
+          <EntitySet Name="ARTICLE" EntityType="Self.ARTICLE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CATEGORY" EntityType="Self.CATEGORY" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="categoryAndArticleConn" EntityType="Self.categoryAndArticleConn" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="COMMENTS" EntityType="Self.COMMENTS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SKILLS" EntityType="Self.SKILLS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TAG_AND_ARTICLE_CONN" EntityType="Self.TAG_AND_ARTICLE_CONN" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TAGS" EntityType="Self.TAGS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="YOUTUBEVIDEOS" EntityType="Self.YOUTUBEVIDEOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Months" EntityType="Self.Months" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Months].[Id] AS [Id], 
+    [Months].[MonthNamee] AS [MonthNamee]
+    FROM [dbo].[Months] AS [Months]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MYBLOGDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="MYBLOGDBEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="ARTICLE" EntityType="MYBLOGDBModel.ARTICLE" />
+          <EntitySet Name="CATEGORY" EntityType="MYBLOGDBModel.CATEGORY" />
+          <EntitySet Name="categoryAndArticleConn" EntityType="MYBLOGDBModel.categoryAndArticleConn" />
+          <EntitySet Name="Months" EntityType="MYBLOGDBModel.Months" />
+          <FunctionImport Name="arsiv" ReturnType="Collection(MYBLOGDBModel.arsiv_Result)" />
+          <FunctionImport Name="arsiv1" ReturnType="Collection(MYBLOGDBModel.arsiv1_Result)" />
+          <EntitySet Name="YOUTUBEVIDEOS" EntityType="MYBLOGDBModel.YOUTUBEVIDEOS" />
+          <EntitySet Name="TAG_AND_ARTICLE_CONN" EntityType="MYBLOGDBModel.TAG_AND_ARTICLE_CONN" />
+          <EntitySet Name="TAGS" EntityType="MYBLOGDBModel.TAGS" />
+          <EntitySet Name="COMMENTS" EntityType="MYBLOGDBModel.COMMENTS" />
+          <EntitySet Name="SKILLS" EntityType="MYBLOGDBModel.SKILLS" />
+        </EntityContainer>
+        <EntityType Name="ARTICLE">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Content" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Author" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ArticleImage" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ArticleViews" Type="Int32" />
+          <Property Name="Is_Active" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CATEGORY">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="categoryAndArticleConn">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Months">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="MonthNamee" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <ComplexType Name="arsiv_Result">
+          <Property Type="String" Name="date" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="AyAdi" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="Yıl" Nullable="true" />
+          <Property Type="Int32" Name="adet" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="arsiv1_Result">
+          <Property Type="Int32" Name="MIKTAR" Nullable="true" />
+          <Property Type="String" Name="AY" Nullable="true" MaxLength="20" />
+          <Property Type="Int32" Name="YIL" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="YOUTUBEVIDEOS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VideoLink" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TAG_AND_ARTICLE_CONN">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TagId" Type="Int32" />
+          <Property Name="ArticleId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TAGS">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TagName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FontSize" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="COMMENTS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CommentByName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="EPOSTA" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="WEBSITE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CREATEDATE" Type="DateTime" Precision="3" />
+          <Property Name="USTID" Type="Int32" />
+          <Property Name="MAKALEID" Type="Int32" />
+          <Property Name="Is_Approve" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="SKILLS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SKILLYUZDE" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SKILLTITLE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SKILL_TITLE_BG" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SKILL_BAR_BG" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MYBLOGDBModelStoreContainer" CdmEntityContainer="MYBLOGDBEntities" >
+          <EntitySetMapping Name="ARTICLE">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.ARTICLE">
+              <MappingFragment StoreEntitySet="ARTICLE">
+                <ScalarProperty Name="Is_Active" ColumnName="Is_Active" />
+                <ScalarProperty Name="ArticleViews" ColumnName="ArticleViews" />
+                <ScalarProperty Name="ArticleImage" ColumnName="ArticleImage" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="ArticleDate" ColumnName="ArticleDate" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CATEGORY">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.CATEGORY">
+              <MappingFragment StoreEntitySet="CATEGORY">
+                <ScalarProperty Name="CategoryName" ColumnName="CategoryName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="categoryAndArticleConn">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.categoryAndArticleConn">
+              <MappingFragment StoreEntitySet="categoryAndArticleConn">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Months">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.Months">
+              <MappingFragment StoreEntitySet="Months">
+                <ScalarProperty Name="MonthNamee" ColumnName="MonthNamee" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="arsiv1" FunctionName="MYBLOGDBModel.Store.arsiv">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MYBLOGDBModel.arsiv1_Result">
+                <ScalarProperty Name="MIKTAR" ColumnName="MIKTAR" />
+                <ScalarProperty Name="AY" ColumnName="AY" />
+                <ScalarProperty Name="YIL" ColumnName="YIL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="YOUTUBEVIDEOS">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.YOUTUBEVIDEOS">
+              <MappingFragment StoreEntitySet="YOUTUBEVIDEOS">
+                <ScalarProperty Name="VideoLink" ColumnName="VideoLink" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TAG_AND_ARTICLE_CONN">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.TAG_AND_ARTICLE_CONN">
+              <MappingFragment StoreEntitySet="TAG_AND_ARTICLE_CONN">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="TagId" ColumnName="TagId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TAGS">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.TAGS">
+              <MappingFragment StoreEntitySet="TAGS">
+                <ScalarProperty Name="FontSize" ColumnName="FontSize" />
+                <ScalarProperty Name="TagName" ColumnName="TagName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="COMMENTS">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.COMMENTS">
+              <MappingFragment StoreEntitySet="COMMENTS">
+                <ScalarProperty Name="Is_Approve" ColumnName="Is_Approve" />
+                <ScalarProperty Name="MAKALEID" ColumnName="MAKALEID" />
+                <ScalarProperty Name="USTID" ColumnName="USTID" />
+                <ScalarProperty Name="CREATEDATE" ColumnName="CREATEDATE" />
+                <ScalarProperty Name="WEBSITE" ColumnName="WEBSITE" />
+                <ScalarProperty Name="EPOSTA" ColumnName="EPOSTA" />
+                <ScalarProperty Name="CommentByName" ColumnName="CommentByName" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SKILLS">
+            <EntityTypeMapping TypeName="MYBLOGDBModel.SKILLS">
+              <MappingFragment StoreEntitySet="SKILLS">
+                <ScalarProperty Name="SKILL_BAR_BG" ColumnName="SKILL_BAR_BG" />
+                <ScalarProperty Name="SKILL_TITLE_BG" ColumnName="SKILL_TITLE_BG" />
+                <ScalarProperty Name="SKILLTITLE" ColumnName="SKILLTITLE" />
+                <ScalarProperty Name="SKILLYUZDE" ColumnName="SKILLYUZDE" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

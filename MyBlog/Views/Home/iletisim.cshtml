@@ -1,0 +1,119 @@
+﻿@{
+    ViewBag.Title = "iletisim";
+    Layout = "~/Views/Shared/_Layaout.cshtml";
+}
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="~/Content/AngularDocuments/HomeAngular.js?v=@DateTime.Now.ToString("ddMMyyyyHHmmss")"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+<style>
+    .input-iletisim {
+        margin-top: 20px;
+        width: 75%;
+        padding: 8px 20px;
+        border: 2px solid #eee;
+        border-left: 3px solid #3b8dbd;
+        border-left-color: #3b8dbd;
+        height: 25px;
+        transition: border-color .8s ease-out;
+    }
+
+    .input-iletisim-message {
+        margin-top: 20px;
+        width: 75%;
+        padding: 8px 20px;
+        border: 2px solid #eee;
+        border-left: 3px solid #3b8dbd;
+        border-left-color: #3b8dbd;
+        transition: border-color .8s ease-out;
+    }
+
+        .input-iletisim-message:focus {
+            outline: none;
+            border: 2px solid #eee;
+            border-right: 3px solid #82b965;
+        }
+
+    .input-iletisim:focus {
+        outline: none;
+        border: 2px solid #eee;
+        border-right: 3px solid #82b965;
+    }
+
+    .iletisim-formu {
+        width: 80%;
+        margin-left: 10%;
+    }
+
+    .iletisim-formu-baslik h3 {
+        font-size: 22px;
+        margin-top: 20px;
+    }
+
+    .btn-post-iletisim {
+        margin: auto;
+        position: relative;
+    }
+</style>
+<div class="page-title hu-pad group">
+    <h2> - Samet Mirza Karakaya - www.sametmirzakarakaya.com <span class="hu-blog-subheading">İletişim</span></h2>
+
+</div><!--/.page-title-->
+
+<div class="iletisim-formu" ng-controller="HomeArticleController">
+    <form id="iletisim">
+        <div class="iletisim-formu-baslik">
+            <h3>İLETİŞİM FORMU</h3>
+        </div>
+        <div class="form-group">
+            <input type="text" id="isim" name="isim" autocomplete="off" placeholder="İsim Giriniz.." class="input-iletisim" />
+        </div>
+        <div class="form-group">
+            <input type="email" id="email" name="email" autocomplete="off" placeholder="Email Giriniz.." class="input-iletisim" />
+        </div>
+        <div class="form-group">
+            <input type="text" id="konu" name="konu" autocomplete="off" placeholder="Konu Giriniz.." class="input-iletisim" />
+            <div class="form-group">
+                <textarea autocomplete="off" rows="10" name="mesaj" id="mesaj" cols="50" class="input-iletisim-message" placeholder="Mesaj Giriniz.."></textarea>
+            </div>
+
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn-post-iletisim" ng-click="PostMail()"  value="Mail Gönder" />
+        </div>
+    </form>
+
+
+</div>
+
+<div class="iletisim-bilgi" style="margin:30px; padding:30px">
+    <h3 style="margin-bottom:20px; font-size:18px">İletişime geçin</h3>
+    <img src="~/Content/mail.png" width="36" height="36" alt="Mail" />  <span><a href="mailto:sametkarakaya14@gmail.com">sametkarakaya14@gmail.com</a></span>
+    <br />
+    <img src="~/Content/Gmail-logo.png" width="36" height="36" alt="Mail2" />    <span><a href="mailto:info@sametmirzakarakaya.com">info@sametmirzakarakaya.com</a></span>
+    <br />
+    <img src="~/Content/tel.png" width="36" height="36" alt="Tel" />    <span><a href="tel:05467873252">05467873252</a></span>
+</div>
+
+<script>
+    function ShowMessage(message, type) {
+        if (type == "s") {
+            swal({
+                title: 'İşlem Başarılı',
+                text: message,
+                type: 'success',
+                showCancelButtonClass: 'btn-success',
+                confirmButtonText: 'Tamam'
+            });
+        }
+        else {
+            swal({
+                title: 'İşlem Başarısız',
+                text: message,
+                type: 'error',
+                showCancelButtonClass: 'btn-danger',
+                confirmButtonText: 'Tamam'
+            });
+        }
+    }
+</script>

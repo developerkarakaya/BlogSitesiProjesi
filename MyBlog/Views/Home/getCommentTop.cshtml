@@ -1,0 +1,15 @@
+﻿@model IEnumerable<MyBlog.DataEntitiess.COMMENTS>
+
+<div id="recent-comments-2" class="widget widget_recent_comments">
+    <h3 class="widget-title">Son Yorumlar</h3>
+    <ul id="recentcomments">
+        @foreach (var item in Model)
+        {
+            using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+            {
+                var makaleTitle = db.ARTICLE.FirstOrDefault(ss => ss.Id == item.MAKALEID).Title; 
+                    <li class="recentcomments"><a href="/@item.MAKALEID--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(makaleTitle)#comment-@item.ID">@makaleTitle</a> için <span class="comment-author-link">@item.CommentByName</span></li>
+            }
+        }
+    </ul>
+</div>

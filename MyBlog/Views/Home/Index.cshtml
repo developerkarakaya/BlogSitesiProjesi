@@ -1,0 +1,120 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layaout.cshtml";
+}
+@model IEnumerable<MyBlog.BussinessLayer.Manager.Model.ArticleSeoModel>
+@{
+    int sayac = 0;
+}
+@using MyBlog.DataEntitiess
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="~/Content/AngularDocuments/HomeAngular.js?v=@DateTime.Now.ToString("ddMMyyyyHHmmss")"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.5.js"></script>
+<link data-require="bootstrap-css" data-semver="3.3.6" rel="stylesheet" href="~/Areas/Panel/angularjs/pageing/bootstrapPaging.css" />
+
+<div class="page-title hu-pad group">
+    <h2> - Samet Mirza Karakaya - www.sametmirzakarakaya.com <span class="hu-blog-subheading">Blog</span></h2>
+</div><!--/.page-title-->
+
+
+<div class="hu-pad group" ng-controller="HomeArticleController">
+    <div class="featured" ng-show="currentPage==1">
+        <article class="group post-10653 post type-post status-publish format-standard has-post-thumbnail hentry category-asp-net-core category-cross-platform category-ef-core category-web category-web-api tag-net-5-0 tag-ef-core-5-0 tag-generic tag-lock tag-mssql tag-repository-pattern tag-rules tag-strategy-design-pattern tag-transaction">
+            <input type="hidden" value="{{Id}}" id="articleId" name="articleId" />
+            <div class="post-inner post-hover">
+                <div class="post-thumbnail featured-img-thumb-large">
+                    <a href="/{{Id}}--{{SeoLink}}">
+                        <img width="720" href="/{{Id}}--{{SeoLink}}" height="340" src="{{ArticleImage}}"
+                             class="attachment-thumb-large size-thumb-large wp-post-image" alt="" loading="lazy"
+                             srcset="{{ArticleImage}} 720w, {{ArticleImage}} 300w, {{ArticleImage}} 520w" sizes="(max-width: 720px) 100vw, 720px" />
+                    </a>
+                    <a class="post-comments" href="/{{Id}}--{{SeoLink}}"><i class="far fa-comments"></i>{{commentCount}}</a>
+                </div><!--/.post-thumbnail-->
+                <div class="post-meta group">
+
+                    <p class="post-category">
+                        <a ng-repeat="itemm in categoryListesi" href="/category/{{itemm.Id}}--{{itemm.CategorySeoLink}}">{{itemm.CategoryName}} /</a>
+                    </p>
+
+                    <p class="post-date">
+                        <time class="published updated" datetime="2020-12-25 10:14:21">{{ArticleDate}}</time>
+                    </p>
+
+                </div><!--/.post-meta-->
+
+                <h2 class="post-title entry-title">
+                    <a href="/{{Id}}--{{SeoLink}}" rel="bookmark" title="Permalink to Repository Pattern ile İşlem Yapılacak Bir Kaydın Kitlenmesi ve Bir Dizi Kural Setinin Çalıştırılması">{{Title}}</a>
+                </h2><!--/.post-title-->
+
+                <div class="entry excerpt entry-summary">
+                    <p>{{Content}} ...</p>
+                </div><!--/.entry-->
+
+            </div><!--/.post-inner-->
+        </article><!--/.post-->
+    </div><!--/.featured-->
+
+    <div id="grid-wrapper" class="post-list group">
+        @for (int i = 0; i < 5; i++)
+        {
+            <div class="post-row">
+                @for (int j = 0; j < 2; j++)
+                {
+                    if (sayac < 1)
+                    {
+                        <article ng-repeat="item in filteredArticles |filter:searchKey" id="post-10482" class="group grid-item post-10482 post type-post status-publish format-standard has-post-thumbnail hentry category-asp-net-core category-azure-2 category-cross-platform category-ef-core category-genel category-redis category-web category-web-api tag-net-core tag-automapper tag-azure tag-azure-functions tag-database-first tag-dependency-injection tag-entity tag-microservice tag-redis tag-redis-pubsub tag-sql tag-worker">
+                            <div class="post-inner post-hover">
+                                <div class="post-thumbnail">
+                                    <a href="/{{item.Id}}--{{item.SeoLink}}">
+                                        <img width="720" href="/{{item.Id}}--{{item.SeoLink}}" height="340" src="{{item.ArticleImage}}" class="attachment-thumb-large size-thumb-large wp-post-image" alt="" loading="lazy"
+                                             srcset="{{item.ArticleImage}} 720w, {{item.ArticleImage}} 300w, {{item.ArticleImage}} 520w" sizes="(max-width: 720px) 100vw, 720px">
+                                    </a>
+                                    <a class="post-comments" href="/{{item.Id}}--{{item.SeoLink}}"><i class="far fa-comments"></i>{{item.commentCount}}</a>
+                                </div><!--/.post-thumbnail-->
+                                <div class="post-meta group">
+                                    <p class="post-category">
+                                        <a ng-repeat="deger in item.categoryList" href="/category/{{deger.Id}}--{{deger.CategorySeoLink}}">{{deger.CategoryName}} / </a>
+                                    </p>
+                                    <p class="post-date">
+                                        <time class="published updated" datetime="{{item.ArticleDate}}">  {{item.ArticleDate}}</time>
+                                    </p>
+
+                                </div><!--/.post-meta-->
+                                <h2 class="post-title entry-title">
+                                    <a href="/{{item.Id}}--{{item.SeoLink}}" rel="bookmark" title="Permalink to Azure Üzerinde Redis Pub/Sub İle Microservis Mimarisinde Data Consistency Sağlamak">{{item.Title}}</a>
+                                </h2><!--/.post-title-->
+
+                                <div class="entry excerpt entry-summary">
+                                    <p>{{item.Content}}...</p>
+                                </div><!--/.entry-->
+
+                            </div><!--/.post-inner-->
+                        </article>
+                    }
+                    
+                    sayac++;
+                }
+            </div>
+        }
+    </div>
+    <div class="row" style="text-align:center">
+        <div class='wp-pagenavi' style="margin-bottom:-25px" role='navigation'>
+            <span class='pages'>Toplam {{numPages}} sayfa, {{currentPage}}. sayfa gösteriliyor.</span>
+        </div>
+        <div class="col-span-12" ng-show="getAllArticleList.length>0">
+            <uib-pagination ng-model="currentPage"
+                            total-items="getAllArticleList.length"
+                            max-size="maxSize"
+                            items-per-page="numPerPage"
+                            first-text="İlk"
+                            class="pagination-sm"
+                            previous-text="Geri"
+                            next-text="İleri"
+                            last-text="Son"
+                            boundary-links="true"
+                            num-pages="numPages"></uib-pagination>
+        </div>
+
+    </div>
+</div><!--/.hu-pad-->

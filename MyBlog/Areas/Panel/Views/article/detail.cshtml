@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "detail";
+
+    Layout = "~/Areas/Panel/Views/Shared/_AdminLayout.cshtml";
+}
+@model MyBlog.DataEntitiess.ARTICLE
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="~/Areas/Panel/angularjs/articleDetail.js?v=@DateTime.Now.ToString("ddMMyyyyHHmmss")"></script>
+<script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-1.2.5.js"></script>
+<div ng-controller="articleDetailController">
+    <input type="hidden" id="ArticleId" value="@Model.Id" />
+    <div class="page-header">
+        <h1>
+            Makale Ekle / Güncelle
+        </h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form id="articleForm" class="form-horizontal" role="form" style="float:left">
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1"> Başlık </label>
+
+                    <div class="col-md-8">
+                        <input type="text" id="Title" placeholder="Başlık" name="Title" value="{{Title}}" class="col-xs-12 col-sm-12" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1"> İçerik </label>
+
+                    <div class="col-md-8">
+                        <textarea name="Content" class="ckeditor" autocomplete="off" id="Content" placeholder="İçerik" required></textarea>
+                    </div>
+                </div>
+
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1"> Yazar </label>
+
+                    <div class="col-md-8">
+                        <input type="text" id="Author" name="Author" placeholder="Yazar" value="{{Author}}" class="col-xs-12 col-sm-12" />
+                    </div>
+                </div>
+
+                <div class="space-4"></div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1">Kategori</label>
+                    <div class="col-md-8">
+                        <select style="width:100%" multiple data-placeholder="Kategori Seç..." id="category-data">
+                            <option ng-repeat="cat in categories" value="{{cat.Id}}">{{cat.CategoryName}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1">Etiket</label>
+                    <div class="col-md-8">
+                        <select style="width:100%" multiple data-placeholder="Etiket Seç..." id="tag-data">
+                            <option ng-repeat="tag in tags" value="{{tag.Id}}">{{tag.TagName}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" >
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1"> Fotoğraf </label>
+                    <div class="col-md-8" >
+                        <input type="file" id="id-input-file-2" data-title="foto" />
+                        <img ng-show="ImageView" width="300" height="200" src="{{ArticleImage}}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-3 control-label no-padding-right" for="form-field-1">  </label>
+                    <div class="col-md-8">
+                        <a href="/panel/article/index" class="btn btn-info" style="float:left">Listeye Dön</a>
+                        <input type="button" class="btn btn-success" ng-click="postArticle()" value="Kaydet" style="float:right" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/Areas/Panel/PanelContent/ckeditor/ckeditor.js"></script>
+<script src="~/Areas/Panel/PanelContent/ckeditor/build-config.js"></script>

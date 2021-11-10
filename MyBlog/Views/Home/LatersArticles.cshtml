@@ -1,0 +1,15 @@
+﻿ @model IEnumerable<MyBlog.DataEntitiess.ARTICLE>
+
+<div id="recent-posts-2" class="widget widget_recent_entries">
+    <h3 class="widget-title">Son Yazılar</h3>
+    <ul>
+        @foreach (var item in 
+        Model)
+        {
+            <li>
+                <a href="/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.Title)">@item.Title</a>
+                <span class="post-date">@item.ArticleDate.Day  @MyBlog.BussinessLayer.Manager.ManagerClasses.MonthTurkce(item.ArticleDate.Month).ToUpper()  @item.ArticleDate.Year   <br /> By <strong>Samet Mirza Karakaya</strong></span>
+            </li>
+        }
+    </ul>
+</div>

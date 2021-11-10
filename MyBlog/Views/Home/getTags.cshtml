@@ -1,0 +1,21 @@
+﻿
+@model List<MyBlog.DataEntitiess.TAGS>
+<div id="wp-cumulus" class="widget wp_cumulus_widget">
+    <h3 class="widget-title">ETİKET BULUTU</h3>						
+    <div id="wpcumuluswidgetcontent7365316">
+        <p>
+                @foreach (var item in Model)
+                {
+                    using (var db = new MyBlog.DataEntitiess.MYBLOGDBEntities())
+                    {
+                        var list = db.TAG_AND_ARTICLE_CONN.Where(ss => ss.TagId == item.Id).ToList();
+                        if (list.Count() != 0)
+                        {
+                            string fontsizestr = item.FontSize + "px";
+                            <a href="/tag/@item.Id--@MyBlog.BussinessLayer.Manager.SeoUrlExtension.FriendlyUrl(item.TagName)" class="tag-cloud-link tag-link-582 tag-link-position-1" style="font-size:@fontsizestr" aria-label="@item.TagName ()">@item.TagName</a>
+                        }
+                    }
+                }
+        </p>
+    </div>
+</div>
